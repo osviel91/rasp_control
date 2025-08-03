@@ -99,7 +99,7 @@
         "kind": 5,
         "importPath": "main",
         "description": "main",
-        "peekOfCode": "app = Flask(__name__)\nCORS(app)\nAPI_KEY = os.environ.get(\"RASP_CONTROL_API_KEY\")\nCURRENT_URL = None\nALLOWED_PROGRAMS = {\n    'blueman': ['blueman-manager'],\n    # 'otro_programa': ['comando']\n}\ndef check_api_key():\n    \"\"\"",
+        "peekOfCode": "app = Flask(__name__)\nAPI_KEY = os.environ.get(\"RASP_CONTROL_API_KEY\")\nCURRENT_URL = None\nALLOWED_PROGRAMS = {\n    'blueman': ['blueman-manager'],\n    # 'otro_programa': ['comando']\n}\ndef check_api_key():\n    \"\"\"\n    Si se define API_KEY, las peticiones deben incluir el encabezado",
         "detail": "main",
         "documentation": {}
     },

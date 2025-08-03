@@ -5,9 +5,6 @@ import os
 
 app = Flask(__name__)
 
-
-CORS(app)
-
 API_KEY = os.environ.get("RASP_CONTROL_API_KEY")
 CURRENT_URL = None
 
