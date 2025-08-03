@@ -1,6 +1,6 @@
 services:
   controls:
-    build: ./Dockerfile
+    build: .
     ports:
       - "5009:5000"
     restart: always
