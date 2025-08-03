@@ -1,0 +1,10 @@
+services:
+  controls:
+    build: Dockerfile
+    ports:
+      - "5009:5000"
+    restart: always
+    privileged: true  # Si vas a controlar la Raspberry
+    volumes:
+      - /run/dbus:/run/dbus
+      - /var/run:/var/run

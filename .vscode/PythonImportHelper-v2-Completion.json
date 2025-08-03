@@ -1,0 +1,81 @@
+[
+    {
+        "label": "Flask",
+        "importPath": "flask",
+        "description": "flask",
+        "isExtraImport": true,
+        "detail": "flask",
+        "documentation": {}
+    },
+    {
+        "label": "jsonify",
+        "importPath": "flask",
+        "description": "flask",
+        "isExtraImport": true,
+        "detail": "flask",
+        "documentation": {}
+    },
+    {
+        "label": "subprocess",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "subprocess",
+        "description": "subprocess",
+        "detail": "subprocess",
+        "documentation": {}
+    },
+    {
+        "label": "status",
+        "kind": 2,
+        "importPath": "main",
+        "description": "main",
+        "peekOfCode": "def status():\n    return jsonify({\"status\": \"OK\"})\n@app.route('/reboot', methods=['POST'])\ndef reboot():\n    subprocess.Popen([\"/sbin/reboot\"])\n    return jsonify({\"action\": \"rebooting\"})\n@app.route('/shutdown', methods=['POST'])\ndef shutdown():\n    subprocess.Popen([\"/sbin/shutdown\", \"now\"])\n    return jsonify({\"action\": \"shutting down\"})",
+        "detail": "main",
+        "documentation": {}
+    },
+    {
+        "label": "reboot",
+        "kind": 2,
+        "importPath": "main",
+        "description": "main",
+        "peekOfCode": "def reboot():\n    subprocess.Popen([\"/sbin/reboot\"])\n    return jsonify({\"action\": \"rebooting\"})\n@app.route('/shutdown', methods=['POST'])\ndef shutdown():\n    subprocess.Popen([\"/sbin/shutdown\", \"now\"])\n    return jsonify({\"action\": \"shutting down\"})\n@app.route('/screen/off', methods=['POST'])\ndef screen_off():\n    subprocess.run([\"vcgencmd\", \"display_power\", \"0\"])",
+        "detail": "main",
+        "documentation": {}
+    },
+    {
+        "label": "shutdown",
+        "kind": 2,
+        "importPath": "main",
+        "description": "main",
+        "peekOfCode": "def shutdown():\n    subprocess.Popen([\"/sbin/shutdown\", \"now\"])\n    return jsonify({\"action\": \"shutting down\"})\n@app.route('/screen/off', methods=['POST'])\ndef screen_off():\n    subprocess.run([\"vcgencmd\", \"display_power\", \"0\"])\n    return jsonify({\"action\": \"screen off\"})\n@app.route('/screen/on', methods=['POST'])\ndef screen_on():\n    subprocess.run([\"vcgencmd\", \"display_power\", \"1\"])",
+        "detail": "main",
+        "documentation": {}
+    },
+    {
+        "label": "screen_off",
+        "kind": 2,
+        "importPath": "main",
+        "description": "main",
+        "peekOfCode": "def screen_off():\n    subprocess.run([\"vcgencmd\", \"display_power\", \"0\"])\n    return jsonify({\"action\": \"screen off\"})\n@app.route('/screen/on', methods=['POST'])\ndef screen_on():\n    subprocess.run([\"vcgencmd\", \"display_power\", \"1\"])\n    return jsonify({\"action\": \"screen on\"})\nif __name__ == '__main__':\n    app.run(host='0.0.0.0', port=5000)",
+        "detail": "main",
+        "documentation": {}
+    },
+    {
+        "label": "screen_on",
+        "kind": 2,
+        "importPath": "main",
+        "description": "main",
+        "peekOfCode": "def screen_on():\n    subprocess.run([\"vcgencmd\", \"display_power\", \"1\"])\n    return jsonify({\"action\": \"screen on\"})\nif __name__ == '__main__':\n    app.run(host='0.0.0.0', port=5000)",
+        "detail": "main",
+        "documentation": {}
+    },
+    {
+        "label": "app",
+        "kind": 5,
+        "importPath": "main",
+        "description": "main",
+        "peekOfCode": "app = Flask(__name__)\n@app.route('/')\ndef status():\n    return jsonify({\"status\": \"OK\"})\n@app.route('/reboot', methods=['POST'])\ndef reboot():\n    subprocess.Popen([\"/sbin/reboot\"])\n    return jsonify({\"action\": \"rebooting\"})\n@app.route('/shutdown', methods=['POST'])\ndef shutdown():",
+        "detail": "main",
+        "documentation": {}
+    }
+]
