@@ -1,8 +1,34 @@
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request, abort
+
 import subprocess
+
+from flask_cors import CORS
+import os
+import base64
 
 app = Flask(__name__)
 
+
+CORS(app)
+
+API_KEY = os.environ.get("RASP_CONTROL_API_KEY")
+CURRENT_URL = None
+
+ALLOWED_PROGRAMS = {
+    'blueman': ['blueman-manager'],
+    # 'otro_programa': ['comando']
+}
+
+def check_api_key():
+    """
+    Si se define API_KEY, las peticiones deben incluir el encabezado
+    X-API-KEY con el valor correcto. De lo contrario se devuelve 401.
+    """
+    if API_KEY:
+        key = request.headers.get('X-API-KEY')
+        if key != API_KEY:
+            abort(401)
+            
 @app.route('/')
 def status():
     return jsonify({"status": "OK"})
@@ -17,15 +43,16 @@ def shutdown():
     subprocess.Popen(["/sbin/shutdown", "now"])
     return jsonify({"action": "shutting down"})
 
-@app.route('/screen/off', methods=['POST'])
-def screen_off():
-    subprocess.run(["vcgencmd", "display_power", "0"])
-    return jsonify({"action": "screen off"})
-
-@app.route('/screen/on', methods=['POST'])
-def screen_on():
-    subprocess.run(["vcgencmd", "display_power", "1"])
-    return jsonify({"action": "screen on"})
+@app.route('/program/<name>', methods=['POST'])
+def start_program(name):
+    cmd = ALLOWED_PROGRAMS.get(name)
+    if not cmd:
+        abort(404)
+    # Establece DISPLAY para que la aplicación gráfica se abra en la pantalla
+    env = dict(os.environ)
+    env['DISPLAY'] = env.get('DISPLAY', ':0')
+    subprocess.Popen(cmd, env=env)
+    return jsonify({"action": f"starting {name}"})
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)

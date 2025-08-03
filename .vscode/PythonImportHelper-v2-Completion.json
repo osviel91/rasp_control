@@ -16,12 +16,63 @@
         "documentation": {}
     },
     {
+        "label": "request",
+        "importPath": "flask",
+        "description": "flask",
+        "isExtraImport": true,
+        "detail": "flask",
+        "documentation": {}
+    },
+    {
+        "label": "abort",
+        "importPath": "flask",
+        "description": "flask",
+        "isExtraImport": true,
+        "detail": "flask",
+        "documentation": {}
+    },
+    {
         "label": "subprocess",
         "kind": 6,
         "isExtraImport": true,
         "importPath": "subprocess",
         "description": "subprocess",
         "detail": "subprocess",
+        "documentation": {}
+    },
+    {
+        "label": "CORS",
+        "importPath": "flask_cors",
+        "description": "flask_cors",
+        "isExtraImport": true,
+        "detail": "flask_cors",
+        "documentation": {}
+    },
+    {
+        "label": "os",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "os",
+        "description": "os",
+        "detail": "os",
+        "documentation": {}
+    },
+    {
+        "label": "base64",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "base64",
+        "description": "base64",
+        "detail": "base64",
+        "documentation": {}
+    },
+    {
+        "label": "check_api_key",
+        "kind": 2,
+        "importPath": "main",
+        "description": "main",
+        "peekOfCode": "def check_api_key():\n    \"\"\"\n    Si se define API_KEY, las peticiones deben incluir el encabezado\n    X-API-KEY con el valor correcto. De lo contrario se devuelve 401.\n    \"\"\"\n    if API_KEY:\n        key = request.headers.get('X-API-KEY')\n        if key != API_KEY:\n            abort(401)\n@app.route('/')",
+        "detail": "main",
         "documentation": {}
     },
     {
@@ -38,7 +89,7 @@
         "kind": 2,
         "importPath": "main",
         "description": "main",
-        "peekOfCode": "def reboot():\n    subprocess.Popen([\"/sbin/reboot\"])\n    return jsonify({\"action\": \"rebooting\"})\n@app.route('/shutdown', methods=['POST'])\ndef shutdown():\n    subprocess.Popen([\"/sbin/shutdown\", \"now\"])\n    return jsonify({\"action\": \"shutting down\"})\n@app.route('/screen/off', methods=['POST'])\ndef screen_off():\n    subprocess.run([\"vcgencmd\", \"display_power\", \"0\"])",
+        "peekOfCode": "def reboot():\n    subprocess.Popen([\"/sbin/reboot\"])\n    return jsonify({\"action\": \"rebooting\"})\n@app.route('/shutdown', methods=['POST'])\ndef shutdown():\n    subprocess.Popen([\"/sbin/shutdown\", \"now\"])\n    return jsonify({\"action\": \"shutting down\"})\n@app.route('/program/<name>', methods=['POST'])\ndef start_program(name):\n    cmd = ALLOWED_PROGRAMS.get(name)",
         "detail": "main",
         "documentation": {}
     },
@@ -47,25 +98,16 @@
         "kind": 2,
         "importPath": "main",
         "description": "main",
-        "peekOfCode": "def shutdown():\n    subprocess.Popen([\"/sbin/shutdown\", \"now\"])\n    return jsonify({\"action\": \"shutting down\"})\n@app.route('/screen/off', methods=['POST'])\ndef screen_off():\n    subprocess.run([\"vcgencmd\", \"display_power\", \"0\"])\n    return jsonify({\"action\": \"screen off\"})\n@app.route('/screen/on', methods=['POST'])\ndef screen_on():\n    subprocess.run([\"vcgencmd\", \"display_power\", \"1\"])",
+        "peekOfCode": "def shutdown():\n    subprocess.Popen([\"/sbin/shutdown\", \"now\"])\n    return jsonify({\"action\": \"shutting down\"})\n@app.route('/program/<name>', methods=['POST'])\ndef start_program(name):\n    cmd = ALLOWED_PROGRAMS.get(name)\n    if not cmd:\n        abort(404)\n    # Establece DISPLAY para que la aplicación gráfica se abra en la pantalla\n    env = dict(os.environ)",
         "detail": "main",
         "documentation": {}
     },
     {
-        "label": "screen_off",
+        "label": "start_program",
         "kind": 2,
         "importPath": "main",
         "description": "main",
-        "peekOfCode": "def screen_off():\n    subprocess.run([\"vcgencmd\", \"display_power\", \"0\"])\n    return jsonify({\"action\": \"screen off\"})\n@app.route('/screen/on', methods=['POST'])\ndef screen_on():\n    subprocess.run([\"vcgencmd\", \"display_power\", \"1\"])\n    return jsonify({\"action\": \"screen on\"})\nif __name__ == '__main__':\n    app.run(host='0.0.0.0', port=5009)",
-        "detail": "main",
-        "documentation": {}
-    },
-    {
-        "label": "screen_on",
-        "kind": 2,
-        "importPath": "main",
-        "description": "main",
-        "peekOfCode": "def screen_on():\n    subprocess.run([\"vcgencmd\", \"display_power\", \"1\"])\n    return jsonify({\"action\": \"screen on\"})\nif __name__ == '__main__':\n    app.run(host='0.0.0.0', port=5009)",
+        "peekOfCode": "def start_program(name):\n    cmd = ALLOWED_PROGRAMS.get(name)\n    if not cmd:\n        abort(404)\n    # Establece DISPLAY para que la aplicación gráfica se abra en la pantalla\n    env = dict(os.environ)\n    env['DISPLAY'] = env.get('DISPLAY', ':0')\n    subprocess.Popen(cmd, env=env)\n    return jsonify({\"action\": f\"starting {name}\"})\nif __name__ == '__main__':",
         "detail": "main",
         "documentation": {}
     },
@@ -74,7 +116,34 @@
         "kind": 5,
         "importPath": "main",
         "description": "main",
-        "peekOfCode": "app = Flask(__name__)\n@app.route('/')\ndef status():\n    return jsonify({\"status\": \"OK\"})\n@app.route('/reboot', methods=['POST'])\ndef reboot():\n    subprocess.Popen([\"/sbin/reboot\"])\n    return jsonify({\"action\": \"rebooting\"})\n@app.route('/shutdown', methods=['POST'])\ndef shutdown():",
+        "peekOfCode": "app = Flask(__name__)\nCORS(app)\nAPI_KEY = os.environ.get(\"RASP_CONTROL_API_KEY\")\nCURRENT_URL = None\nALLOWED_PROGRAMS = {\n    'blueman': ['blueman-manager'],\n    # 'otro_programa': ['comando']\n}\ndef check_api_key():\n    \"\"\"",
+        "detail": "main",
+        "documentation": {}
+    },
+    {
+        "label": "API_KEY",
+        "kind": 5,
+        "importPath": "main",
+        "description": "main",
+        "peekOfCode": "API_KEY = os.environ.get(\"RASP_CONTROL_API_KEY\")\nCURRENT_URL = None\nALLOWED_PROGRAMS = {\n    'blueman': ['blueman-manager'],\n    # 'otro_programa': ['comando']\n}\ndef check_api_key():\n    \"\"\"\n    Si se define API_KEY, las peticiones deben incluir el encabezado\n    X-API-KEY con el valor correcto. De lo contrario se devuelve 401.",
+        "detail": "main",
+        "documentation": {}
+    },
+    {
+        "label": "CURRENT_URL",
+        "kind": 5,
+        "importPath": "main",
+        "description": "main",
+        "peekOfCode": "CURRENT_URL = None\nALLOWED_PROGRAMS = {\n    'blueman': ['blueman-manager'],\n    # 'otro_programa': ['comando']\n}\ndef check_api_key():\n    \"\"\"\n    Si se define API_KEY, las peticiones deben incluir el encabezado\n    X-API-KEY con el valor correcto. De lo contrario se devuelve 401.\n    \"\"\"",
+        "detail": "main",
+        "documentation": {}
+    },
+    {
+        "label": "ALLOWED_PROGRAMS",
+        "kind": 5,
+        "importPath": "main",
+        "description": "main",
+        "peekOfCode": "ALLOWED_PROGRAMS = {\n    'blueman': ['blueman-manager'],\n    # 'otro_programa': ['comando']\n}\ndef check_api_key():\n    \"\"\"\n    Si se define API_KEY, las peticiones deben incluir el encabezado\n    X-API-KEY con el valor correcto. De lo contrario se devuelve 401.\n    \"\"\"\n    if API_KEY:",
         "detail": "main",
         "documentation": {}
     }
