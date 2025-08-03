@@ -39,14 +39,21 @@ def shutdown():
 
 @app.route('/program/<name>', methods=['POST'])
 def start_program(name):
+    check_api_key()
     cmd = ALLOWED_PROGRAMS.get(name)
     if not cmd:
         abort(404)
-    # Establece DISPLAY para que la aplicación gráfica se abra en la pantalla
-    env = dict(os.environ)
-    env['DISPLAY'] = env.get('DISPLAY', ':0')
-    subprocess.Popen(cmd, env=env)
-    return jsonify({"action": f"starting {name}"})
+    # Construye la cadena de comando y usa bash para ejecutarla con DISPLAY=:0
+    command_str = ' '.join(cmd)
+    try:
+        subprocess.Popen(
+            ['bash', '-c', f'DISPLAY=:0 {command_str}']
+        )
+        return jsonify({"action": f"starting {name}"})
+    except FileNotFoundError:
+        return jsonify({"error": f"Program '{name}' not found"}), 500
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)

@@ -72,7 +72,7 @@
         "kind": 2,
         "importPath": "main",
         "description": "main",
-        "peekOfCode": "def reboot():\n    subprocess.Popen([\"/sbin/reboot\"])\n    return jsonify({\"action\": \"rebooting\"})\n@app.route('/shutdown', methods=['POST'])\ndef shutdown():\n    subprocess.Popen([\"/sbin/shutdown\", \"now\"])\n    return jsonify({\"action\": \"shutting down\"})\n@app.route('/program/<name>', methods=['POST'])\ndef start_program(name):\n    cmd = ALLOWED_PROGRAMS.get(name)",
+        "peekOfCode": "def reboot():\n    subprocess.Popen([\"/sbin/reboot\"])\n    return jsonify({\"action\": \"rebooting\"})\n@app.route('/shutdown', methods=['POST'])\ndef shutdown():\n    subprocess.Popen([\"/sbin/shutdown\", \"now\"])\n    return jsonify({\"action\": \"shutting down\"})\n@app.route('/program/<name>', methods=['POST'])\ndef start_program(name):\n    check_api_key()",
         "detail": "main",
         "documentation": {}
     },
@@ -81,7 +81,7 @@
         "kind": 2,
         "importPath": "main",
         "description": "main",
-        "peekOfCode": "def shutdown():\n    subprocess.Popen([\"/sbin/shutdown\", \"now\"])\n    return jsonify({\"action\": \"shutting down\"})\n@app.route('/program/<name>', methods=['POST'])\ndef start_program(name):\n    cmd = ALLOWED_PROGRAMS.get(name)\n    if not cmd:\n        abort(404)\n    # Establece DISPLAY para que la aplicación gráfica se abra en la pantalla\n    env = dict(os.environ)",
+        "peekOfCode": "def shutdown():\n    subprocess.Popen([\"/sbin/shutdown\", \"now\"])\n    return jsonify({\"action\": \"shutting down\"})\n@app.route('/program/<name>', methods=['POST'])\ndef start_program(name):\n    check_api_key()\n    cmd = ALLOWED_PROGRAMS.get(name)\n    if not cmd:\n        abort(404)\n    # Construye la cadena de comando y usa bash para ejecutarla con DISPLAY=:0",
         "detail": "main",
         "documentation": {}
     },
@@ -90,7 +90,7 @@
         "kind": 2,
         "importPath": "main",
         "description": "main",
-        "peekOfCode": "def start_program(name):\n    cmd = ALLOWED_PROGRAMS.get(name)\n    if not cmd:\n        abort(404)\n    # Establece DISPLAY para que la aplicación gráfica se abra en la pantalla\n    env = dict(os.environ)\n    env['DISPLAY'] = env.get('DISPLAY', ':0')\n    subprocess.Popen(cmd, env=env)\n    return jsonify({\"action\": f\"starting {name}\"})\nif __name__ == '__main__':",
+        "peekOfCode": "def start_program(name):\n    check_api_key()\n    cmd = ALLOWED_PROGRAMS.get(name)\n    if not cmd:\n        abort(404)\n    # Construye la cadena de comando y usa bash para ejecutarla con DISPLAY=:0\n    command_str = ' '.join(cmd)\n    try:\n        subprocess.Popen(\n            ['bash', '-c', f'DISPLAY=:0 {command_str}']",
         "detail": "main",
         "documentation": {}
     },
