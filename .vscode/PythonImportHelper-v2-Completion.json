@@ -41,29 +41,12 @@
         "documentation": {}
     },
     {
-        "label": "CORS",
-        "importPath": "flask_cors",
-        "description": "flask_cors",
-        "isExtraImport": true,
-        "detail": "flask_cors",
-        "documentation": {}
-    },
-    {
         "label": "os",
         "kind": 6,
         "isExtraImport": true,
         "importPath": "os",
         "description": "os",
         "detail": "os",
-        "documentation": {}
-    },
-    {
-        "label": "base64",
-        "kind": 6,
-        "isExtraImport": true,
-        "importPath": "base64",
-        "description": "base64",
-        "detail": "base64",
         "documentation": {}
     },
     {

@@ -1,10 +1,7 @@
 from flask import Flask, jsonify, request, abort
 
 import subprocess
-
-from flask_cors import CORS
 import os
-import base64
 
 app = Flask(__name__)
 
