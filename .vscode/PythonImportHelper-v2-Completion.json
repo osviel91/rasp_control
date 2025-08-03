@@ -56,7 +56,7 @@
         "kind": 2,
         "importPath": "main",
         "description": "main",
-        "peekOfCode": "def screen_off():\n    subprocess.run([\"vcgencmd\", \"display_power\", \"0\"])\n    return jsonify({\"action\": \"screen off\"})\n@app.route('/screen/on', methods=['POST'])\ndef screen_on():\n    subprocess.run([\"vcgencmd\", \"display_power\", \"1\"])\n    return jsonify({\"action\": \"screen on\"})\nif __name__ == '__main__':\n    app.run(host='0.0.0.0', port=5000)",
+        "peekOfCode": "def screen_off():\n    subprocess.run([\"vcgencmd\", \"display_power\", \"0\"])\n    return jsonify({\"action\": \"screen off\"})\n@app.route('/screen/on', methods=['POST'])\ndef screen_on():\n    subprocess.run([\"vcgencmd\", \"display_power\", \"1\"])\n    return jsonify({\"action\": \"screen on\"})\nif __name__ == '__main__':\n    app.run(host='0.0.0.0', port=5009)",
         "detail": "main",
         "documentation": {}
     },
@@ -65,7 +65,7 @@
         "kind": 2,
         "importPath": "main",
         "description": "main",
-        "peekOfCode": "def screen_on():\n    subprocess.run([\"vcgencmd\", \"display_power\", \"1\"])\n    return jsonify({\"action\": \"screen on\"})\nif __name__ == '__main__':\n    app.run(host='0.0.0.0', port=5000)",
+        "peekOfCode": "def screen_on():\n    subprocess.run([\"vcgencmd\", \"display_power\", \"1\"])\n    return jsonify({\"action\": \"screen on\"})\nif __name__ == '__main__':\n    app.run(host='0.0.0.0', port=5009)",
         "detail": "main",
         "documentation": {}
     },
